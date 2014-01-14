@@ -1,0 +1,69 @@
+apply plugin: 'groovy'
+apply plugin: 'idea'
+
+group = "directree"
+version = "0.1"
+description = "A Simple DSL to create Directory Tree with Text Files"
+
+repositories {
+    jcenter()
+}
+
+sourceSets {
+    main.groovy.srcDir 'src'
+    test.groovy.srcDir 'test'
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.2.1'
+    testCompile 'junit:junit:4.10'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
+}
+
+// publishing to bintray
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
+    }
+}
+
+apply plugin: 'maven-publish'
+apply plugin: 'bintray'
+
+publishing {
+    publications {
+        groovyMaven(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+// set bintrayUser & bintrayKey in gradle.properties
+bintray {
+
+    user = getPropertyOrUseDefault("bintrayUser", "fake_user")
+    key = getPropertyOrUseDefault("bintrayKey", "fake_key")
+    publications = ['groovyMaven']
+
+    def projectName = project.name
+    def projectDescription = project.description
+
+    pkg {
+        repo = 'maven' // or your repo name
+        name = projectName      // somehow project.* doesn't work in this closure
+        desc = projectDescription
+        licenses = ['MIT']
+    }
+    dryRun = true // whether to run this as dry-run, without deploying
+}
+
+String getPropertyOrUseDefault(String propertyName, String defaultValue) {
+    hasProperty(propertyName) ? getProperty(propertyName) : defaultValue
+}
