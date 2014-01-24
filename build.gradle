@@ -23,6 +23,12 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.10'
 }
 
+idea {
+    module {
+        excludeDirs += [file(".gradle"), file('gradle')]
+    }
+}
+
 // publishing to bintray
 
 buildscript {
