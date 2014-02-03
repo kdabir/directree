@@ -1,7 +1,9 @@
 DirecTree
 ---------
 
-A Simple DSL to create Directory Tree and Text Files with contents
+A Simple DSL for :
+- creating Directory Trees with Text Files (with contents).
+- Keeping multiple source directories in sync with a target directory.
 
 ```groovy
 @GrabResolver(name="directree", root='http://dl.bintray.com/kdabir/maven') @Grab('directree:directree:0.1')

@@ -1,22 +1,6 @@
 package directree
 
-class DirTreeIntegrationTest extends GroovyTestCase {
-
-    def tempDir
-    def deleteOnExit = true
-
-    void setUp() {
-        tempDir = new File("${System.properties['java.io.tmpdir'] ?: "."}/directest")
-        tempDir.mkdirs()
-    }
-
-    void "test that tempDir is created"() {
-        assert tempDir.isDirectory()
-    }
-
-    void tearDown() {
-        if (deleteOnExit) tempDir.deleteDir()
-    }
+class DirTreeIntegrationTest extends FileSystemIntegrationTestsBase {
 
     void "test should create root directory"() {
         final root = "$tempDir/glidetest1"

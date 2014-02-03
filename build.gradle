@@ -2,7 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'idea'
 
 group = "directree"
-version = "0.1"
+version = "0.2-alpha"
 description = "A Simple DSL to create Directory Tree with Text Files"
 
 repositories {
@@ -15,7 +15,8 @@ sourceSets {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.2.1'
+    compile 'org.codehaus.groovy:groovy-all:2.2.1',
+            'org.apache.ant:ant:1.8.4'     // required for AntBuilder
     testCompile 'junit:junit:4.10'
 }
 
@@ -53,7 +54,6 @@ publishing {
 
 // set bintrayUser & bintrayKey in gradle.properties
 bintray {
-
     user = getPropertyOrUseDefault("bintrayUser", "fake_user")
     key = getPropertyOrUseDefault("bintrayKey", "fake_key")
     publications = ['groovyMaven']
