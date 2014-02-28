@@ -1,33 +1,45 @@
 package directree
 
-class DirTreeTest extends GroovyTestCase {
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 
-    protected void setUp() {
+class DirTreeTest {
+
+    @Before
+    void setUp() {
         File.metaClass {
             mkdirs = {-> false}
             setText = {text -> }
         }
     }
 
-    protected void tearDown() {
+    @After
+    void tearDown() {
         File.metaClass = null
     }
 
-    void "test should be able to create DirTreeBuilder with root dir"() {
-        File.metaClass.mkdirs = {-> assert delegate.name == "root"}
+    @Test
+    void "should be able to create DirTree with root dir"() {
+        def called = false
+        File.metaClass.mkdirs = {-> assert delegate.name == "root"; called = true}
         DirTree.create("root")
+        assert called
     }
 
-    void "test should fail creation of DirTreeBuilder without root dir"() {
-        shouldFail {
-            DirTree.create()
-        }
-        shouldFail {
-            DirTree.create({})
-        }
+
+    @Test(expected = Exception)
+    void "should fail creation of DirTreeBuilder without root dir"() {
+        DirTree.create()
     }
 
-    void "test chaining and nesting"() {
+    @Test(expected = Exception)
+    void "should fail creation of DirTreeBuilder without root dir 2"() {
+        DirTree.create({})
+    }
+
+    @Test
+    void "should be able to chain and nest"() {
         def mkdirCount = 0
         def setTextCount = 0
         File.metaClass {
@@ -55,7 +67,8 @@ class DirTreeTest extends GroovyTestCase {
         assert setTextCount == 3
     }
 
-    void "test closures should get the complete path from root"() {
+    @Test
+    void "closures should get the complete path from root"() {
         DirTree.create "root", {
             assert it == "root"
             dir("src") {
@@ -67,6 +80,7 @@ class DirTreeTest extends GroovyTestCase {
         }
     }
 
+    @Test
     void "test should write what is passed as string or what closure returns"() {
         File.metaClass.setText { text -> assert text == "hello"}
 
@@ -76,6 +90,7 @@ class DirTreeTest extends GroovyTestCase {
                 .file("c.txt") {"hello"}
     }
 
+    @Test
     void "test should create empty file when nothing is passed or closure returns nothing"() {
         File.metaClass.setText { text -> assert text == ""}
 
