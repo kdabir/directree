@@ -20,6 +20,3 @@
 *.bak
 *.swp
 *~.nib
-*.jar
-*.war
-*.ear
