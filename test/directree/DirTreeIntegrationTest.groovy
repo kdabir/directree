@@ -13,7 +13,7 @@ class DirTreeIntegrationTest extends FileSystemIntegrationTestsBase {
     void "test should create a file"() {
         final root = "$tempDir/glidetest2"
 
-        DirTree.create(root).file("hello.txt", "helloworld")
+        DirTree.build(root).file("hello.txt", "helloworld").create()
 
         assert new File(root).exists()
         assert new File("$root/hello.txt").text == "helloworld"

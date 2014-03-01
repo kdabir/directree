@@ -4,6 +4,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+import static org.junit.Assert.assertNotNull
+
 class DirTreeTest {
 
     @Before
@@ -18,6 +20,15 @@ class DirTreeTest {
     void tearDown() {
         File.metaClass = null
     }
+
+
+    @Test
+    void "should instantiate DirTree with root dir" () {
+        def dirTree = new DirTree("a")
+        //assert dirTree["a"] == new File("a")
+        assertNotNull(dirTree)
+    }
+
 
     @Test
     void "should be able to create DirTree with root dir"() {
@@ -47,19 +58,11 @@ class DirTreeTest {
             setText {text -> setTextCount++}
         }
 
-        DirTree.create("root").file("a.txt", "hello").dir("src")
+        new DirTree("root").file("a.txt", "hello").dir("src").create()
         DirTree.create("root") {
-            file("a.txt") {
-                // todo probably remove this feature
-                // todo test what gets written to this file
-                dir("illegaldir") {
-                    // illegal semantically, so this dir should be created in parent of file
-                    it == "root"
-                }
-                file("somefile") {
-                    // illegal semantically, so this file should be created in parent of file
-                    it == "root"
-                }
+            file("a.txt")
+            dir("test") {
+                file("b.txt")
             }
         }
 
@@ -82,23 +85,27 @@ class DirTreeTest {
 
     @Test
     void "test should write what is passed as string or what closure returns"() {
-        File.metaClass.setText { text -> assert text == "hello"}
+        int count = 0
+        File.metaClass.setText { text -> assert text == "hello"; count++}
 
-        DirTree.create("root/src")
+        new DirTree("root/src")
                 .file("a.txt", "hello")
                 .file("b.txt", {"hello"})
-                .file("c.txt") {"hello"}
+                .file("c.txt") {"hello"}.create()
+        assert count == 3
     }
 
     @Test
     void "test should create empty file when nothing is passed or closure returns nothing"() {
-        File.metaClass.setText { text -> assert text == ""}
+        int count = 0
+        File.metaClass.setText { text -> assert text == ""; count++}
 
-        DirTree.create("root/src") {
+        DirTree.build("root/src") {
             file("a.txt")
             file("b.txt") { }
             file("c.txt", { })
             file("d.txt", null)
-        }
+        }.create()
+        assert count == 4
     }
 }

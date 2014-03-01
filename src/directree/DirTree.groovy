@@ -1,43 +1,64 @@
 package directree
 
+import groovy.transform.Canonical
+
+abstract class AbstractPath {
+    abstract def create()
+}
+
 /**
- * a DSL to create a Directory Tree and text files with content
+ * if no content string is provided or content closure does not return a string the content of file is set to blank string
+ */
+@Canonical
+class WritableFile extends AbstractPath {
+    File file
+    final def content
+
+    def create() {
+        final text = (content instanceof Closure) ? content(file.toString()) : content
+        file.text = text ?: ""
+    }
+}
+
+/**
+ * a DSL to perform operations on and/or create a Directory Tree and Text Files with content
  *
  */
-class DirTree {
-    def baseDir
+class DirTree extends AbstractPath {
+    File dir
+    Map<String, AbstractPath> children = [:]
 
-    // todo - validate the file/dir names
-
-    private DirTree(String baseDir, Closure closure = {}) {
-        this.baseDir = baseDir
-
-        new File(baseDir).mkdirs()
-
+    private DirTree(File baseDir, Closure closure) {
+        this.dir = baseDir
         closure?.resolveStrategy = Closure.DELEGATE_FIRST
         closure?.delegate = this
-        closure?.call(baseDir)
+        closure?.call(baseDir.toString())
     }
 
-    static def create(String name, Closure closure = {}) {
-        new DirTree(name, closure)
+    DirTree(String baseDir, Closure closure = {}) {
+        this(new File(baseDir), closure)
+    }
+
+    def create() {
+        dir.mkdirs()
+        children.each { key, value -> value.create() }
     }
 
     def dir(String name, Closure closure = {}) {
-        new DirTree("$baseDir/$name", closure)
+        children[name] = new DirTree(new File(dir, name), closure)
+        this
     }
 
-    /**
-     * if no content string is provided or content closure does not return a string the content of file is set to blank string
-     *
-     * @param name
-     * @param content String or Closure that returns a string to be written in the file
-     * @return
-     */
     def file(String name, def content = "") {
-        final file_path = "$baseDir/$name"
-        final text = (content instanceof Closure) ? content(file_path) : content
-        new File(file_path).text = text ?: ""
+        children[name] = new WritableFile(new File(dir, name), content)
         this
+    }
+
+    static DirTree build(String name, Closure closure = {}) {
+        new DirTree(name, closure)
+    }
+
+    static void create(String name, Closure closure = {}) {
+        new DirTree(name, closure).create()
     }
 }
