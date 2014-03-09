@@ -114,4 +114,8 @@ class DirTree extends AbstractPath {
 
     def propertyMissing(String name) { children[name] }
 
+    def walk(Closure c) {
+        [c.call(this), children.collect { key, value -> (value instanceof DirTree) ? value.walk(c) : c.call(value) }].flatten()
+    }
+
 }

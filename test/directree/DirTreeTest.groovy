@@ -147,4 +147,20 @@ class DirTreeTest {
         assert tree['a.txt'].options == [overwrite: true]
         assert tree['test'].options == [required: true]
     }
+
+    @Test
+    void "should be able to traverse directree"() {
+
+        def tree = DirTree.build("root") {
+            file("a.txt")
+            dir("test") {
+                dir("other") {
+                    file("file.txt")
+                }
+                file("b.txt")
+            }
+        }
+
+        assert tree.walk {it.file.name} == ["root", "a.txt", "test", "other", "file.txt", "b.txt"]
+    }
 }
