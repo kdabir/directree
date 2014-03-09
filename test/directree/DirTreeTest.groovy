@@ -105,4 +105,32 @@ class DirTreeTest {
 
         assert count["setText"] == 4
     }
+
+    @Test
+    void "should be able to refer a file in DirTree"() {
+
+        def tree = DirTree.build("root") {
+            file("a.txt")
+            dir("test") {
+                file("b.txt")
+            }
+        }
+
+        assert tree['a.txt'].file == new File("root/a.txt")
+        assert tree.'a.txt'.file == new File("root/a.txt")
+        assert tree['test']['b.txt'].file == new File("root/test/b.txt")
+    }
+
+    @Test
+    void "should return null if file does not exists"() {
+
+        def tree = DirTree.build("root") {
+            file("a.txt")
+            dir("test") {
+                file("b.txt")
+            }
+        }
+
+        assert tree['b.txt'] == null
+    }
 }

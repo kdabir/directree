@@ -2,8 +2,23 @@ package directree
 
 import groovy.transform.Canonical
 
+/**
+ * Represents any path (file or directory) on file-system
+ */
 abstract class AbstractPath {
+
+    /**
+     * creates the path in the appropriate way
+     * @return
+     */
     abstract def create()
+
+    /**
+     * returns the file representation
+     *
+     * @return File object
+     */
+    abstract File getFile()
 }
 
 /**
@@ -61,4 +76,16 @@ class DirTree extends AbstractPath {
     static void create(String name, Closure closure = {}) {
         new DirTree(name, closure).create()
     }
+
+    File getFile() {dir}
+
+    /**
+     * get the abstract path by name in the current dir
+     *
+     * @param key
+     * @return path - you need to call .file on the returned path to get java.util.File representation
+     */
+    def getAt(String key) { children[key] }
+    def propertyMissing(String name) { children[name] }
+
 }
