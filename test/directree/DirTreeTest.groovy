@@ -133,4 +133,18 @@ class DirTreeTest {
 
         assert tree['b.txt'] == null
     }
+
+    @Test
+    void "should be able to add arbitrary options"() {
+
+        def tree = DirTree.build("root") {
+            file("a.txt", overwrite:true)
+            dir("test", required:true) {
+                file("b.txt")
+            }
+        }
+
+        assert tree['a.txt'].options == [overwrite: true]
+        assert tree['test'].options == [required: true]
+    }
 }
