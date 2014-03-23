@@ -2,7 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'idea'
 
 group = "io.github.kdabir.directree"
-version = "0.2"
+version = "0.3-SNAPSHOT"
 description = "A Simple DSL to create Directory Tree with Text Files"
 
 sourceCompatibility = 1.6

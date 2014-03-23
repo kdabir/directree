@@ -67,3 +67,6 @@ create("my-project") {
 ```
 
 `create(".")` will create the files and directories in current directory.
+
+
+[![Build Status](https://travis-ci.org/kdabir/directree.svg?branch=master)](https://travis-ci.org/kdabir/directree)
