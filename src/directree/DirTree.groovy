@@ -6,6 +6,9 @@ import groovy.transform.Canonical
  * Represents any path (file or directory) on file-system
  */
 abstract class AbstractPath {
+    /**
+     * options are stored conditional precessing or storing meta data about the file.
+     */
     Map options
 
     /**
@@ -24,19 +27,31 @@ abstract class AbstractPath {
 }
 
 /**
- * if no content string is provided or content closure does not return a string the content of file is set to blank string
+ * Represents a writable file (Text file)
  */
 @Canonical
 class WritableFile extends AbstractPath {
     File file
     final def content
 
+    /**
+     * Build a writable file object. The content is not written to disk yet. create method writes changes to the disk
+     *
+     * @param options
+     * @param file
+     * @param content
+     */
     WritableFile(Map options = [:], File file, content) {
         this.file = file
         this.content = content
         this.options = options
     }
 
+    /**
+     * Writes the file to the file system
+     *
+     * @return
+     */
     def create() {
         final text = (content instanceof Closure) ? content(file.toString()) : content
         file.text = text ?: ""
@@ -44,7 +59,7 @@ class WritableFile extends AbstractPath {
 }
 
 /**
- * a DSL to perform operations on and/or create a Directory Tree and Text Files with content
+ * A DSL to perform operations on and/or create a Directory Tree and Text Files with content
  *
  */
 class DirTree extends AbstractPath {
@@ -59,49 +74,120 @@ class DirTree extends AbstractPath {
         closure?.call(baseDir.toString())
     }
 
+    /**
+     * Constructs a representation of Directory Tree. This is not written to file system by default.
+     * use create method to write the tree on file system
+     *
+     * @param options
+     * @param baseDir
+     * @param closure
+     */
     DirTree(Map options = [:], String baseDir, Closure closure = {}) {
         this(options, new File(baseDir), closure)
     }
 
+    /**
+     * Creates the tree on the file system.
+     *
+     * @return
+     */
     def create() {
         dir.mkdirs()
         children.each { key, value -> value.create() }
     }
 
+    /**
+     * Represents a Directory Tree with files.
+     *
+     * @param options Map of supported options
+     * @param name Required, name of file)
+     * @param content Optional, String or Closure
+     */
     def dir(Map options, String name, Closure closure = {}) {
         children[name] = new DirTree(options, new File(dir, name), closure)
         this
     }
 
+    /**
+     * Represents a Directory Tree with files.
+     *
+     * @param name Required, name of directory
+     * @param closure Optional, Closure representing nested files
+     */
     def dir(String name, Closure closure = {}) {
         dir([:], name, closure)
     }
 
+    /**
+     * Represents a file with content. Options can be stored for processing and/or later retrieval
+     *
+     * @param options Map of supported options
+     * @param name Required, name of file)
+     * @param content Optional, String or Closure
+     */
     def file(Map options, String name, def content = "") {
         children[name] = new WritableFile(options, new File(dir, name), content)
         this
     }
 
+    /**
+     * Represents a file with content.
+     *
+     * @param name Required, name of file)
+     * @param content Optional, String or Closure
+     */
     def file(String name, def content = "") {
         file([:],name, content)
     }
 
+    /**
+     * Builds a Directory Tree but does not write it to file system
+     *
+     * @param options
+     * @param name
+     * @param closure
+     */
     static DirTree build(Map options, String name, Closure closure = {}) {
         new DirTree(options, name, closure)
     }
 
+    /**
+     * Builds a Directory Tree but does not write it to file system
+     *
+     * @param name
+     * @param closure
+     * @return
+     */
     static DirTree build(String name, Closure closure = {}) {
         new DirTree([:], name, closure)
     }
 
+    /**
+     * Utility method to build and create a directory tree. The changes are written to file system.
+     *
+     * @param options
+     * @param name
+     * @param closure
+     */
     static void create(Map options, String name, Closure closure = {}) {
         new DirTree(options, name, closure).create()
     }
 
+    /**
+     * Utility method to build and create a directory tree. The changes are written to file system.
+     *
+     * @param name
+     * @param closure
+     */
     static void create(String name, Closure closure = {}) {
         new DirTree([:], name, closure).create()
     }
 
+    /**
+     * returns the Directory represented as a File object
+     *
+     * @return File
+     */
     File getFile() { dir }
 
     /**
@@ -114,6 +200,12 @@ class DirTree extends AbstractPath {
 
     def propertyMissing(String name) { children[name] }
 
+    /**
+     * Executes the closure for every entry in the DirTree
+     *
+     * @param closure
+     * @return
+     */
     def walk(Closure c) {
         [c.call(this), children.collect { key, value -> (value instanceof DirTree) ? value.walk(c) : c.call(value) }].flatten()
     }

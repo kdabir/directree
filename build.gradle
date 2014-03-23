@@ -1,9 +1,12 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
 
-group = "directree"
-version = "0.2-alpha-1"
+group = "io.github.kdabir.directree"
+version = "0.2"
 description = "A Simple DSL to create Directory Tree with Text Files"
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
 repositories {
     jcenter()
@@ -15,7 +18,7 @@ sourceSets {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.2.1',
+    compile 'org.codehaus.groovy:groovy-all:2.2.2',
             'org.apache.ant:ant:1.8.4'     // required for AntBuilder
     testCompile 'junit:junit:4.10'
 }
@@ -25,9 +28,46 @@ task wrapper(type: Wrapper) {
 }
 
 idea {
+    project {
+        ipr.withXml { provider ->
+            def node = provider.asNode()
+
+            // Use GIT
+            def vcsConfig = node.component.find { it.'@name' == 'VcsDirectoryMappings' }
+            vcsConfig.mapping[0].'@vcs' = 'Git'
+        }
+    }
+
+
     module {
         excludeDirs += [file(".gradle"), file('gradle')]
     }
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Directree',
+                'Implementation-Version': version,
+                'Built-By': System.getProperty("user.name"),
+                'Built-Date': new Date(),
+                'Built-JDK': System.getProperty("java.version"),
+                'Built-Gradle': gradle.gradleVersion
+    }
+}
+
+task sourcesJar(type: Jar) {
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
+task groovydocJar(type: Jar, dependsOn: groovydoc) {
+    classifier 'groovydoc'
+    from groovydoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives groovydocJar
 }
 
 // publishing to bintray
@@ -48,6 +88,40 @@ publishing {
     publications {
         groovyMaven(MavenPublication) {
             from components.java
+            artifact sourcesJar
+            artifact groovydocJar
+
+            pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+
+                    description project.description
+                    url "https://github.com/kdabir/directree"
+
+                    developers {
+                        developer {
+                            id 'kdabir'
+                            name 'Kunal Dabir'
+                        }
+                    }
+
+                    scm {
+                        url 'https://github.com/kdabir/directree'
+                        connection 'scm:git://github.com/kdabir/directree.git'
+                        developerConnection 'scm:git://github.com/kdabir/directree.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'MIT License'
+                            url 'http://opensource.org/licenses/MIT'
+                            distribution 'repo'
+                        }
+                    }
+
+                }
+            }
+
         }
     }
 }

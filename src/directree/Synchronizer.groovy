@@ -6,8 +6,8 @@ import groovy.time.TimeDuration
 /**
  * Syncs source dir(s) to target dir (utilizing the underlying ant) at a given interval.
  *
- * source -> http://ant.apache.org/manual/Types/fileset.html
- * target -> http://ant.apache.org/manual/Tasks/sync.html
+ * source (see http://ant.apache.org/manual/Types/fileset.html)
+ * target (see http://ant.apache.org/manual/Tasks/sync.html)
  *
  * Instances of this class are not meant to be accessed by multiple threads. In short, Thread Safety is not guaranteed.
  *
@@ -17,9 +17,8 @@ class Synchronizer {
     /* Constants */
     static final def ALLOWED_KEYS_FOR_PRESERVE = ['includes', 'preserveEmptyDirs'].asImmutable()
     static final def ALLOWED_KEYS_FOR_SOURCE_OPTS = ['includes', 'excludes', 'casesensitive'].asImmutable()
-    static final
-    def ALLOWED_KEYS_FOR_TARGET_OPTS = ['overwrite', 'failonerror', 'verbose', 'granularity', 'includeEmptyDirs'].asImmutable()
-    static final int DEFAULT_SYNC_FREQUECY = 3000
+    static final def ALLOWED_KEYS_FOR_TARGET_OPTS = ['overwrite', 'failonerror', 'verbose', 'granularity', 'includeEmptyDirs'].asImmutable()
+    static final int DEFAULT_SYNC_FREQUENCY = 3000
     static final int DEFAULT_INITIAL_DELAY = 0
 
     /* Collaborators */
@@ -32,7 +31,7 @@ class Synchronizer {
     private final List<Map> sources = []
     private final Map target = [:]
     private final Map preserve = [:]
-    private int syncFrequency = DEFAULT_SYNC_FREQUECY
+    private int syncFrequency = DEFAULT_SYNC_FREQUENCY
     private int initialDelay = DEFAULT_INITIAL_DELAY
     private long lastSynced = 0
 

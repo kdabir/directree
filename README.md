@@ -2,32 +2,52 @@ DirecTree
 ---------
 
 A Simple DSL for :
-- creating Directory Trees with Text Files (with contents).
+- Creating directory trees with text files (with contents).
 - Keeping multiple source directories in sync with a target directory.
 
 ```groovy
-@GrabResolver(name="directree", root='http://dl.bintray.com/kdabir/maven') @Grab('directree:directree:0.1')
+@GrabResolver(name="directree", root='http://dl.bintray.com/kdabir/maven')
+@Grab('io.github.kdabir.directree:directree:0.2')
 import static directree.DirTree.create
 
-create("crazystuff") {
-    dir "temp" , {
-        file "todo.txt", "check out this new library"
+create("my-dir") {
+    dir ("todo") {
+        file "first.txt", "check out this new library"
+    }
+
+    file ("README.md") { """
+        Directree
+        ${'='*80}
+
+        There are multiple ways in which content can be written to a file.
+        after all, its all a valid groovy code.
+        """.stripIndent()
     }
 }
 ```
 
 #### Verifying it:
 
-`$ tree crazystuff`
+`$ tree my-dir`
 
->       crazystuff
->       `-- temp
->            `-- todo.txt
+    my-dir
+    |-- README.md
+    `-- todo
+        `-- first.txt
 
-`$ cat crazystuff/temp/todo.txt`
+    1 directory, 2 files
 
->       check out this new library
+`$ cat my-dir/README.md`
 
+    Directree
+    ================================================================================
+
+    There are multiple ways in which content can be written to a file.
+    after all, its all a valid groovy code.
+
+`$ cat my-dir/todo/first.txt`
+
+    check out this new library
 
 #### More realistic example
 
