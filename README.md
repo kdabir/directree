@@ -5,6 +5,8 @@ A Simple DSL for :
 - Creating directory trees with text files (with contents).
 - Keeping multiple source directories in sync with a target directory.
 
+ [![Build Status](https://travis-ci.org/kdabir/directree.svg?branch=v0.2)](https://travis-ci.org/kdabir/directree)
+
 ```groovy
 @GrabResolver(name="directree", root='http://dl.bintray.com/kdabir/maven')
 @Grab('io.github.kdabir.directree:directree:0.2')
@@ -69,4 +71,3 @@ create("my-project") {
 `create(".")` will create the files and directories in current directory.
 
 
-[![Build Status](https://travis-ci.org/kdabir/directree.svg?branch=master)](https://travis-ci.org/kdabir/directree)
