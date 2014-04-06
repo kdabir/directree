@@ -5,10 +5,11 @@ A Simple DSL for :
 - Creating directory trees with text files (with contents).
 - Keeping multiple source directories in sync with a target directory.
 
- [![Build Status](https://travis-ci.org/kdabir/directree.svg?branch=master)](https://travis-ci.org/kdabir/directree)
+[![Build Status](https://travis-ci.org/kdabir/directree.svg?branch=master)](https://travis-ci.org/kdabir/directree)
+
+> directree is available in `jcenter` maven repository.
 
 ```groovy
-@GrabResolver(name="directree", root='http://dl.bintray.com/kdabir/maven')
 @Grab('io.github.kdabir.directree:directree:0.2')
 import static directree.DirTree.create
 
