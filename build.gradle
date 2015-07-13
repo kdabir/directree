@@ -1,8 +1,13 @@
+plugins {
+    id "com.jfrog.bintray" version "1.2"
+}
+
 apply plugin: 'groovy'
 apply plugin: 'idea'
+apply plugin: 'maven-publish'
 
 group = "io.github.kdabir.directree"
-version = "0.3-SNAPSHOT"
+version = "0.3.0"
 description = "A Simple DSL to create Directory Tree with Text Files"
 
 sourceCompatibility = 1.6
@@ -18,13 +23,13 @@ sourceSets {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.2.2',
+    compile 'org.codehaus.groovy:groovy-all:2.4.3',
             'org.apache.ant:ant:1.8.4'     // required for AntBuilder
     testCompile 'junit:junit:4.10'
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '2.5'
 }
 
 idea {
@@ -37,7 +42,6 @@ idea {
             vcsConfig.mapping[0].'@vcs' = 'Git'
         }
     }
-
 
     module {
         excludeDirs += [file(".gradle"), file('gradle')]
@@ -72,17 +76,6 @@ artifacts {
 
 // publishing to bintray
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
-    }
-}
-
-apply plugin: 'maven-publish'
-apply plugin: 'bintray'
 
 publishing {
     publications {
@@ -141,7 +134,7 @@ bintray {
         desc = projectDescription
         licenses = ['MIT']
     }
-    dryRun = true // whether to run this as dry-run, without deploying
+    dryRun = Boolean.valueOf getPropertyOrUseDefault("bintrayDryRun", "true") // whether to run this as dry-run, without deploying
 }
 
 String getPropertyOrUseDefault(String propertyName, String defaultValue) {

@@ -189,9 +189,16 @@ class Synchronizer {
     /* API */
     /**
      * Syncs the Source Directories to Target Directory ONCE.
-     *
+     * @deprecated use syncOnce
      */
     public sync() {
+        syncOnce()
+    }
+
+    /**
+     * Syncs the Source Directories to Target Directory ONCE.
+     */
+    public syncOnce() {
         beforeSyncCallbacks*.call()
 
         ant.sync(target) {
@@ -209,7 +216,7 @@ class Synchronizer {
      *
      */
     public void start() {
-        timer.schedule(this.&sync as TimerTask, initialDelay, syncFrequency)
+        timer.schedule(this.&syncOnce as TimerTask, initialDelay, syncFrequency)
     }
 
     /**
@@ -237,9 +244,9 @@ class Synchronizer {
         closure?.delegate = synchronizerToBeConfigured
         closure?.call()
 
-        // can do the validation here
+        //enhancements: can do the validation here
 
-        return synchronizerToBeConfigured;
+        synchronizerToBeConfigured
     }
 }
 
