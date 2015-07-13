@@ -82,7 +82,13 @@ class Synchronizer {
      * @param closure
      * @return
      */
-    def beforeSync(Closure closure) { beforeSyncCallbacks << closure; this }
+    def beforeSync(Closure closure) {
+        closure?.resolveStrategy = Closure.DELEGATE_FIRST
+        closure?.delegate = this
+
+        beforeSyncCallbacks << closure;
+        this
+    }
 
     /**
      * Registers a callback hook which will be called after every sync
@@ -90,7 +96,13 @@ class Synchronizer {
      * @param closure
      * @return
      */
-    def afterSync(Closure closure) { afterSyncCallbacks << closure; this }
+    def afterSync(Closure closure) {
+        closure?.resolveStrategy = Closure.DELEGATE_FIRST
+        closure?.delegate = this
+
+        afterSyncCallbacks << closure;
+        this
+    }
 
     /**
      * Sync will happen at this frequency. Default is 3 seconds

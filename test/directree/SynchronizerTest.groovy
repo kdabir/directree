@@ -170,6 +170,26 @@ class SynchronizerTest extends GroovyTestCase {
         assert afterCalled
     }
 
+    void "test sync hooks can be defined after sync object creation"() {
+        def timeBeforeRun = System.currentTimeMillis()
+        def timeAfterSync = 0
+        def readRandomProp = 0
+        def otherSynchronizer = Synchronizer.build {
+            initialDelayInSeconds 1
+        }
+
+        otherSynchronizer.beforeSync {
+            readRandomProp = initialDelayInSeconds
+        }.afterSync {
+            timeAfterSync = lastSynced
+        }
+
+        otherSynchronizer.sync()
+
+        assert readRandomProp == 1
+        assert timeAfterSync > timeBeforeRun
+    }
+
 
     void "test every sync should update the lastSynced"() {
         def timeBeforeRun = System.currentTimeMillis()
