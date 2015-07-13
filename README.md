@@ -10,7 +10,7 @@ A Simple DSL for :
 > directree is available in `jcenter` maven repository.
 
 ```groovy
-@Grab('io.github.kdabir.directree:directree:0.3')
+@Grab('io.github.kdabir.directree:directree:0.3.0')
 import static directree.DirTree.create
 
 create("my-dir") {
