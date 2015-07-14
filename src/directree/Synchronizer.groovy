@@ -236,9 +236,9 @@ class Synchronizer {
      * @param closure
      * @return
      */
-    static def build(closure) {
+    static Synchronizer build(closure) {
         Integer.metaClass.mixin TimeCategory
-        def synchronizerToBeConfigured = new Synchronizer()
+        Synchronizer synchronizerToBeConfigured = new Synchronizer()
 
         closure?.resolveStrategy = Closure.DELEGATE_FIRST
         closure?.delegate = synchronizerToBeConfigured
