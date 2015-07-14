@@ -106,7 +106,7 @@ class SynchronizerTest extends GroovyTestCase {
                 .targetDir("out", verbose:true)
                 .preserve(includes: "*.md")
                 .withAnt(mockAntBuilder)
-                .sync()
+                .syncOnce()
 
         mockingContextForAntBuilder.verify(mockAntBuilder)
     }
@@ -124,7 +124,7 @@ class SynchronizerTest extends GroovyTestCase {
 
         def mockAntBuilder = mockingContextForAntBuilder.proxyInstance()
 
-        synchronizer.withAnt(mockAntBuilder).sync()
+        synchronizer.withAnt(mockAntBuilder).syncOnce()
 
         mockingContextForAntBuilder.verify(mockAntBuilder)
     }
@@ -164,7 +164,7 @@ class SynchronizerTest extends GroovyTestCase {
             afterSync { afterCalled = true }
         }
 
-        otherSynchronizer.sync()
+        otherSynchronizer.syncOnce()
 
         assert beforeCalled
         assert afterCalled
@@ -184,7 +184,7 @@ class SynchronizerTest extends GroovyTestCase {
             timeAfterSync = lastSynced
         }
 
-        otherSynchronizer.sync()
+        otherSynchronizer.syncOnce()
 
         assert readRandomProp == 1
         assert timeAfterSync > timeBeforeRun
@@ -194,7 +194,7 @@ class SynchronizerTest extends GroovyTestCase {
     void "test every sync should update the lastSynced"() {
         def timeBeforeRun = System.currentTimeMillis()
 
-        synchronizer.sync()
+        synchronizer.syncOnce()
 
         assert synchronizer.lastSynced >= timeBeforeRun
     }

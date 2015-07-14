@@ -49,7 +49,7 @@ class SynchronizerIntegrationTest extends FileSystemIntegrationTestsBase {
             sourceDir source2, includes: "**/*.html"
             sourceDir includes: "**/*.groovy", excludes: "test/**", source1
             targetDir dest, overwrite: true
-        }.sync()
+        }.syncOnce()
 
         assertDirs dest
         assertFiles "$dest/src/home.groovy", "$dest/src/layout.groovy", "$dest/web/index.html"
@@ -62,7 +62,7 @@ class SynchronizerIntegrationTest extends FileSystemIntegrationTestsBase {
                 sourceDir source1
                 sourceDir "nonexistingdir"
                 targetDir dest
-            }.sync()
+            }.syncOnce()
         }
     }
 }
