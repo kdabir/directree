@@ -20,6 +20,9 @@ class Synchronizer {
     static final def ALLOWED_KEYS_FOR_TARGET_OPTS = ['overwrite', 'failonerror', 'verbose', 'granularity', 'includeEmptyDirs'].asImmutable()
     static final int DEFAULT_SYNC_FREQUENCY = 3000
     static final int DEFAULT_INITIAL_DELAY = 0
+    // false values are okay, just don't let nulls in
+    private static final def NON_NULL_VALUES = { it.value != null }
+
 
     /* Collaborators */
     Timer timer = new Timer()
@@ -136,9 +139,6 @@ class Synchronizer {
      */
     def startAfter(TimeDuration duration) { initialDelay = duration.toMilliseconds(); this }
 
-    // false values are okay, just don't let nulls in
-    private def nonNullValues = { it.value != null }
-
     /**
      * Sets the Source Directory for Synchronizer
      *
@@ -149,7 +149,7 @@ class Synchronizer {
      * @return
      */
     def sourceDir(options = [:], String sourceDir) {
-        final map = [dir: sourceDir] + options.subMap(ALLOWED_KEYS_FOR_SOURCE_OPTS).findAll(nonNullValues)
+        final map = [dir: sourceDir] + options.subMap(ALLOWED_KEYS_FOR_SOURCE_OPTS).findAll(NON_NULL_VALUES)
         sources << map.asImmutable()
         this
     }
@@ -167,7 +167,7 @@ class Synchronizer {
     def targetDir(options = [:], String targetDir) {
         // clear the map so the second call, which ideally should never happen, does not retain values from previous call
         target.clear()
-        target << [todir: targetDir] + options.subMap(ALLOWED_KEYS_FOR_TARGET_OPTS).findAll(nonNullValues)
+        target << [todir: targetDir] + options.subMap(ALLOWED_KEYS_FOR_TARGET_OPTS).findAll(NON_NULL_VALUES)
         this
     }
 
@@ -182,7 +182,7 @@ class Synchronizer {
     def preserve(Map options = [:]) {
         // clear the map so the second call, which ideally should never happen, does not retain values from previous call
         preserve.clear()
-        preserve << options.subMap(ALLOWED_KEYS_FOR_PRESERVE).findAll(nonNullValues)
+        preserve << options.subMap(ALLOWED_KEYS_FOR_PRESERVE).findAll(NON_NULL_VALUES)
         this
     }
 
