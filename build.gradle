@@ -7,7 +7,7 @@ apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 group = "io.github.kdabir.directree"
-version = "0.3.0"
+version = "0.3.1"
 description = "A Simple DSL to create Directory Tree with Text Files"
 
 sourceCompatibility = 1.6
@@ -23,13 +23,13 @@ sourceSets {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.4.3',
+    compile 'org.codehaus.groovy:groovy-all:2.4.7',
             'org.apache.ant:ant:1.8.4'     // required for AntBuilder
-    testCompile 'junit:junit:4.10'
+    testCompile 'junit:junit:4.12'
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.5'
+    gradleVersion = '2.14.1'
 }
 
 idea {
@@ -44,7 +44,7 @@ idea {
     }
 
     module {
-        excludeDirs += [file(".gradle"), file('gradle')]
+        excludeDirs += [file(".gradle"), file('gradle'), file('.idea')]
     }
 }
 
