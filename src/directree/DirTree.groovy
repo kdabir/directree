@@ -45,7 +45,7 @@ class DirTree extends AbstractPath {
      * @param name Required, name of file)
      * @param content Optional, String or Closure
      */
-    def dir(Map options, String name, Closure closure = {}) {
+    def dir(Map options, String name, @DelegatesTo(DirTree) Closure closure = {}) {
         children[name] = new DirTree(options, new File(dir, name), closure)
         this
     }
@@ -56,7 +56,7 @@ class DirTree extends AbstractPath {
      * @param name Required, name of directory
      * @param closure Optional, Closure representing nested files
      */
-    def dir(String name, Closure closure = {}) {
+    def dir(String name, @DelegatesTo(DirTree) Closure closure = {}) {
         dir([:], name, closure)
     }
 
@@ -89,7 +89,7 @@ class DirTree extends AbstractPath {
      * @param name
      * @param closure
      */
-    static DirTree build(Map options, String name, Closure closure = {}) {
+    static DirTree build(Map options, String name, @DelegatesTo(DirTree) Closure closure = {}) {
         new DirTree(options, name, closure)
     }
 
@@ -100,7 +100,7 @@ class DirTree extends AbstractPath {
      * @param closure
      * @return
      */
-    static DirTree build(String name, Closure closure = {}) {
+    static DirTree build(String name, @DelegatesTo(DirTree) Closure closure = {}) {
         new DirTree([:], name, closure)
     }
 
@@ -111,7 +111,7 @@ class DirTree extends AbstractPath {
      * @param name
      * @param closure
      */
-    static void create(Map options, String name, Closure closure = {}) {
+    static void create(Map options, String name, @DelegatesTo(DirTree) Closure closure = {}) {
         new DirTree(options, name, closure).create()
     }
 
@@ -121,7 +121,7 @@ class DirTree extends AbstractPath {
      * @param name
      * @param closure
      */
-    static void create(String name, Closure closure = {}) {
+    static void create(String name, @DelegatesTo(DirTree) Closure closure = {}) {
         new DirTree([:], name, closure).create()
     }
 
