@@ -85,7 +85,7 @@ class Synchronizer {
      * @param closure
      * @return
      */
-    def beforeSync(Closure closure) {
+    def beforeSync(@DelegatesTo(Synchronizer) Closure closure) {
         closure?.resolveStrategy = Closure.DELEGATE_FIRST
         closure?.delegate = this
 
@@ -99,7 +99,7 @@ class Synchronizer {
      * @param closure
      * @return
      */
-    def afterSync(Closure closure) {
+    def afterSync(@DelegatesTo(Synchronizer) Closure closure) {
         closure?.resolveStrategy = Closure.DELEGATE_FIRST
         closure?.delegate = this
 
@@ -236,7 +236,7 @@ class Synchronizer {
      * @param closure
      * @return
      */
-    static Synchronizer build(closure) {
+    static Synchronizer build(@DelegatesTo(Synchronizer) closure) {
         Integer.metaClass.mixin TimeCategory
         Synchronizer synchronizerToBeConfigured = new Synchronizer()
 
