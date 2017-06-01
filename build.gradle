@@ -23,13 +23,13 @@ sourceSets {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.4.7',
-            'org.apache.ant:ant:1.8.4'     // required for AntBuilder
+    compile 'org.codehaus.groovy:groovy-all:2.4.11',
+            'org.apache.ant:ant:1.9.9'     // required for AntBuilder
     testCompile 'junit:junit:4.12'
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14.1'
+    gradleVersion = '3.5'
 }
 
 idea {
