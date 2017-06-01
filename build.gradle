@@ -1,13 +1,14 @@
 plugins {
-    id "com.jfrog.bintray" version "1.2"
+    id 'groovy'
+    id 'maven-publish'
+    id 'idea'
+    id "com.jfrog.bintray" version '1.7.3'
+    id 'net.researchgate.release' version '2.6.0'
+
 }
 
-apply plugin: 'groovy'
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
-
 group = "io.github.kdabir.directree"
-version = "0.3.1"
+version = "0.3.1-SNAPSHOT"
 description = "A Simple DSL to create Directory Tree with Text Files"
 
 sourceCompatibility = 1.6
@@ -133,6 +134,8 @@ bintray {
         name = projectName      // somehow project.* doesn't work in this closure
         desc = projectDescription
         licenses = ['MIT']
+        vcsUrl = 'https://github.com/kdabir/directree'
+
     }
     dryRun = Boolean.valueOf getPropertyOrUseDefault("bintrayDryRun", "true") // whether to run this as dry-run, without deploying
 }
@@ -140,3 +143,14 @@ bintray {
 String getPropertyOrUseDefault(String propertyName, String defaultValue) {
     hasProperty(propertyName) ? getProperty(propertyName) : defaultValue
 }
+
+release {
+    tagTemplate = 'v$version'
+
+    if (System.env.CI == 'true') { // only on CI servers
+        failOnUnversionedFiles = false
+    }
+
+}
+
+afterReleaseBuild.dependsOn bintrayUpload
