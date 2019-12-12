@@ -2,7 +2,7 @@ plugins {
     id 'groovy'
     id 'maven-publish'
     id 'idea'
-    id "com.jfrog.bintray" version '1.7.3'
+    id "com.jfrog.bintray" version '1.8.4'
     id 'net.researchgate.release' version '2.6.0'
 
 }
