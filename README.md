@@ -5,7 +5,7 @@ A Simple DSL for :
 - Creating directory trees with text files (with contents).
 - Keeping multiple source directories in sync with a target directory.
 
-[![Build Status](https://travis-ci.org/kdabir/directree.svg?branch=master)](https://travis-ci.org/kdabir/directree)
+![Build](https://github.com/kdabir/directree/workflows/Build/badge.svg)
 
 > directree is available in `jcenter` maven repository.
 
