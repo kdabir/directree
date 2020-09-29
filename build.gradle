@@ -23,7 +23,7 @@ sourceSets {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:3.0.5',
+    compile 'org.codehaus.groovy:groovy-all:3.0.6',
             'org.apache.ant:ant:1.10.8'     // required for AntBuilder
     testCompile 'junit:junit:4.13'
 }
